@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DashboardView: View {
     @StateObject private var viewModel: DashboardViewModel
+    @EnvironmentObject var homeKitManager: HomeKitManager
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
 
@@ -142,11 +143,22 @@ struct DashboardView: View {
             } else {
                 LazyVGrid(columns: gridColumns, spacing: AppTheme.Spacing.md) {
                     ForEach(viewModel.deviceGroups, id: \.category) { group in
-                        DashboardCategoryCard(
-                            category: group.category,
-                            count: group.count,
-                            action: { viewModel.quickAction(for: group.category) }
-                        )
+                        if group.category == .lights {
+                            NavigationLink(destination: LightsView(homeKitManager: homeKitManager)) {
+                                DashboardCategoryCard(
+                                    category: group.category,
+                                    count: group.count,
+                                    action: {}
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            DashboardCategoryCard(
+                                category: group.category,
+                                count: group.count,
+                                action: { viewModel.quickAction(for: group.category) }
+                            )
+                        }
                     }
                 }
                 .padding(.horizontal)
