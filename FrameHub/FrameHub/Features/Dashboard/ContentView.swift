@@ -42,7 +42,7 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(
             LinearGradient(
-                gradient: Gradient(colors: [.blue.opacity(0.1), .purple.opacity(0.1)]),
+                gradient: Gradient(colors: [.blue.opacity(0.3), .purple.opacity(0.3)]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
