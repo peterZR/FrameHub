@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
+	<key>NSHomeKitUsageDescription</key>
+	<string>FrameHub needs access to your HomeKit devices to control lights, thermostats, locks, and other smart home accessories from this control panel.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>FrameHub uses the camera for optional motion detection to wake the screen when you approach. No images are stored or transmitted.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>FrameHub accesses your photo library to display photos in the screensaver mode, helping prevent screen burn-in. Photos are only displayed locally and never uploaded.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>FrameHub uses your approximate location to display weather information. Location data is only used for weather and is not stored or shared.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>cc.zoneride.FrameHub</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>framehub</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
