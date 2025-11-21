@@ -98,6 +98,102 @@ class HomeKitManager: NSObject, ObservableObject {
             accessory.cameraProfiles?.isEmpty == false
         }
     }
+
+    // MARK: - Device Categorization
+
+    /// Categorize an accessory
+    func categorize(_ accessory: HMAccessory) -> DeviceCategory {
+        // Check for lights
+        if accessory.services.contains(where: { $0.serviceType == HMServiceTypeLightbulb }) {
+            return .lights
+        }
+
+        // Check for thermostats
+        if accessory.services.contains(where: { $0.serviceType == HMServiceTypeThermostat }) {
+            return .thermostats
+        }
+
+        // Check for locks
+        if accessory.services.contains(where: { $0.serviceType == HMServiceTypeLockMechanism }) {
+            return .locks
+        }
+
+        // Check for cameras
+        if accessory.cameraProfiles?.isEmpty == false {
+            return .cameras
+        }
+
+        // Check for switches
+        if accessory.services.contains(where: { $0.serviceType == HMServiceTypeSwitch }) {
+            return .switches
+        }
+
+        // Check for outlets
+        if accessory.services.contains(where: { $0.serviceType == HMServiceTypeOutlet }) {
+            return .outlets
+        }
+
+        // Check for fans
+        if accessory.services.contains(where: { $0.serviceType == HMServiceTypeFan }) {
+            return .fans
+        }
+
+        // Check for window coverings
+        if accessory.services.contains(where: { $0.serviceType == HMServiceTypeWindowCovering || $0.serviceType == HMServiceTypeWindow }) {
+            return .windowCoverings
+        }
+
+        // Check for garage doors
+        if accessory.services.contains(where: { $0.serviceType == HMServiceTypeGarageDoorOpener }) {
+            return .garageDoors
+        }
+
+        // Check for sensors
+        if accessory.services.contains(where: {
+            $0.serviceType == HMServiceTypeMotionSensor ||
+            $0.serviceType == HMServiceTypeTemperatureSensor ||
+            $0.serviceType == HMServiceTypeHumiditySensor ||
+            $0.serviceType == HMServiceTypeContactSensor ||
+            $0.serviceType == HMServiceTypeLeakSensor ||
+            $0.serviceType == HMServiceTypeSmokeSensor ||
+            $0.serviceType == HMServiceTypeCarbonMonoxideSensor ||
+            $0.serviceType == HMServiceTypeCarbonDioxideSensor
+        }) {
+            return .sensors
+        }
+
+        return .other
+    }
+
+    /// Get all devices grouped by category
+    func getDeviceGroups() -> [DeviceGroup] {
+        var groups: [DeviceCategory: [GenericDevice]] = [:]
+
+        for accessory in accessories {
+            let category = categorize(accessory)
+            let device = GenericDevice(
+                id: UUID(uuidString: accessory.uniqueIdentifier.uuidString) ?? UUID(),
+                name: accessory.name,
+                accessory: accessory,
+                category: category,
+                roomName: accessory.room?.name
+            )
+
+            if groups[category] == nil {
+                groups[category] = []
+            }
+            groups[category]?.append(device)
+        }
+
+        return groups.map { category, devices in
+            DeviceGroup(category: category, devices: devices)
+        }.sorted { $0.category.displayName < $1.category.displayName }
+    }
+
+    /// Get device count by category
+    func deviceCount(for category: DeviceCategory) -> Int {
+        return accessories.filter { categorize($0) == category }.count
+    }
 }
 
 // MARK: - HMHomeManagerDelegate
